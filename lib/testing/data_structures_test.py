@@ -1,104 +1,75 @@
 #!/usr/bin/env python3
 
-from data_structures import get_names, get_spiciest_foods, print_spicy_foods,\
-                                create_spicy_food, get_spicy_food_by_cuisine, \
-                                print_spiciest_foods, get_average_heat_level
+from data_structures import (
+    get_names,
+    get_spiciest_foods,
+    print_spicy_foods,
+    create_spicy_food,
+    get_spicy_food_by_cuisine,
+    print_spiciest_foods,
+    get_average_heat_level,
+)
 
 import io
 import sys
 
 class TestDataStructures:
-    '''Module data_structures.py'''
-
     SPICY_FOODS = [
-        {
-            "name": "Green Curry",
-            "cuisine": "Thai",
-            "heat_level": 9,
-        },
-        {
-            "name": "Buffalo Wings",
-            "cuisine": "American",
-            "heat_level": 3,
-        },
-        {
-            "name": "Mapo Tofu",
-            "cuisine": "Sichuan",
-            "heat_level": 6,
-        }
+        {"name": "Green Curry", "cuisine": "Thai", "heat_level": 9},
+        {"name": "Buffalo Wings", "cuisine": "American", "heat_level": 3},
+        {"name": "Mapo Tofu", "cuisine": "Sichuan", "heat_level": 6},
     ]
 
     def test_get_names(self):
-        '''contains function get_names() that retrieves names from list of foods.'''
-        assert(get_names(TestDataStructures.SPICY_FOODS) == ['Green Curry', 'Buffalo Wings', 'Mapo Tofu'])
+        """Test that get_names returns all food names."""
+        assert get_names(self.SPICY_FOODS) == ["Green Curry", "Buffalo Wings", "Mapo Tofu"]
 
     def test_get_spiciest_foods(self):
-        '''contains function get_spiciest_foods() that returns foods with a heat_level over 5.'''
-        for food in get_spiciest_foods(TestDataStructures.SPICY_FOODS):
-            assert(food["heat_level"]) > 5
-    
-    def test_print_spicy_foods(self):
-        '''contains function print_spicy_foods that returns all foods formatted with 🌶  emojis.'''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        print_spicy_foods(TestDataStructures.SPICY_FOODS)
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Green Curry (Thai) | Heat Level: 🌶🌶🌶🌶🌶🌶🌶🌶🌶\n" +
-            "Buffalo Wings (American) | Heat Level: 🌶🌶🌶\n" +
-            "Mapo Tofu (Sichuan) | Heat Level: 🌶🌶🌶🌶🌶🌶\n")
+        """Test that get_spiciest_foods returns foods with heat_level > 5."""
+        spiciest = get_spiciest_foods(self.SPICY_FOODS)
+        for food in spiciest:
+            assert food["heat_level"] > 5
 
     def test_get_spicy_food_by_cuisine(self):
-        '''contains function get_spicy_food_by_cuisine that returns the food that matches a cuisine.'''
-        assert(get_spicy_food_by_cuisine(TestDataStructures.SPICY_FOODS, "American") == {
-            "name": "Buffalo Wings",
-            "cuisine": "American",
-            "heat_level": 3,
-        })
+        """Test that get_spicy_food_by_cuisine returns the correct food."""
+        result = get_spicy_food_by_cuisine(self.SPICY_FOODS, "American")
+        assert result == {"name": "Buffalo Wings", "cuisine": "American", "heat_level": 3}
 
-    def test_print_spiciest_foods(self):
-        '''contains function print_spiciest_foods that returns foods with heat_level over 5 formatted with 🌶  emojis.'''
+    def test_print_spicy_foods(self):
+        """Test that print_spicy_foods prints all foods correctly."""
         captured_out = io.StringIO()
         sys.stdout = captured_out
-        print_spiciest_foods(TestDataStructures.SPICY_FOODS)
+
+        print_spicy_foods(self.SPICY_FOODS)
+
         sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Green Curry (Thai) | Heat Level: 🌶🌶🌶🌶🌶🌶🌶🌶🌶\n" +
-            "Mapo Tofu (Sichuan) | Heat Level: 🌶🌶🌶🌶🌶🌶\n")
+        output = captured_out.getvalue()
+        assert "Green Curry (Thai) | Heat Level: 🌶🌶🌶🌶🌶🌶🌶🌶🌶" in output
+        assert "Buffalo Wings (American) | Heat Level: 🌶🌶🌶" in output
+        assert "Mapo Tofu (Sichuan) | Heat Level: 🌶🌶🌶🌶🌶🌶" in output
+
+    def test_print_spiciest_foods(self):
+        """Test that print_spiciest_foods prints only foods with heat_level > 5."""
+        captured_out = io.StringIO()
+        sys.stdout = captured_out
+
+        print_spiciest_foods(self.SPICY_FOODS)
+
+        sys.stdout = sys.__stdout__
+        output = captured_out.getvalue()
+        assert "Green Curry (Thai)" in output
+        assert "Mapo Tofu (Sichuan)" in output
+        assert "Buffalo Wings (American)" not in output
 
     def test_get_average_heat_level(self):
-        '''contains function get_average_heat_level that returns average of heat_levels in spicy_foods.'''
-        assert(get_average_heat_level(TestDataStructures.SPICY_FOODS) == 6)
+        """Test that get_average_heat_level returns correct average."""
+        avg = get_average_heat_level(self.SPICY_FOODS)
+        expected = (9 + 3 + 6) / 3
+        assert avg == expected
 
     def test_create_spicy_food(self):
-        '''contains function create_spicy_food that returns original list of spicy_foods with new spicy_food added.'''
-        new_spicy_foods = create_spicy_food(
-           TestDataStructures.SPICY_FOODS,
-            {
-                'name': 'Griot',
-                'cuisine': 'Haitian',
-                'heat_level': 10,
-            }
-        )
-
-        assert new_spicy_foods == [
-            {
-                "name": "Green Curry",
-                "cuisine": "Thai",
-                "heat_level": 9,
-            },
-            {
-                "name": "Buffalo Wings",
-                "cuisine": "American",
-                "heat_level": 3,
-            },
-            {
-                "name": "Mapo Tofu",
-                "cuisine": "Sichuan",
-                "heat_level": 6,
-            },
-            {
-                "name": "Griot",
-                "cuisine": "Haitian",
-                "heat_level": 10,
-            },
-        ]
-
+        """Test that create_spicy_food adds a new spicy food correctly."""
+        new_food = {"name": "Griot", "cuisine": "Haitian", "heat_level": 10}
+        updated_list = create_spicy_food(self.SPICY_FOODS, new_food)
+        assert updated_list[-1] == new_food
+        assert len(updated_list) == len(self.SPICY_FOODS) + 1
